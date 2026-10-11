@@ -69,7 +69,7 @@ Search Tools
 ## Privacy Policy
 
 **Privacy Policy URL**
-<!-- TODO：托管到 GitHub Pages 或任一公开 URL。下方为可直接使用的文本。 -->
+https://serena-sheng.github.io/chrome-ext-privacy/ego-start.html
 
 > 本扩展不收集、不存储、不传输任何个人信息。扩展仅将「上次使用的搜索入口」保存在本机浏览器存储中，该数据不会离开你的设备。扩展不访问、不修改你的浏览历史，也不与任何第三方共享数据。
 
