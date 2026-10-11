@@ -37,8 +37,8 @@ Search Tools
 | Asset | Dimensions | Status | Filename |
 |-------|-----------|--------|----------|
 | Store Icon [REQUIRED] | 128×128 PNG | ✅ Ready | `icons/icon-128.png` |
-| Screenshot 1 [REQUIRED] | 1280×800 or 640×400 | ⬜ Not created | |
-| Screenshot 2 [RECOMMENDED] | 1280×800 or 640×400 | ⬜ Not created | |
+| Screenshot 1 [REQUIRED] | 1280×800 | ✅ Ready（亮色） | `store/screenshot-01-light.png` |
+| Screenshot 2 [RECOMMENDED] | 1280×800 | ✅ Ready（暗色） | `store/screenshot-02-dark.png` |
 | Small Promo Tile [RECOMMENDED] | 440×280 | ✅ Ready | `store/promo-440x280.png` |
 | Marquee Promo Tile | 1400×560 | ⬜ Not created | |
 
@@ -84,7 +84,7 @@ Search Tools
 serena-sheng
 
 **Contact Email**
-<!-- TODO：填公开显示的联系邮箱 -->
+serenaamphistritesheng@outlook.com
 
 **Support URL / Email**
 https://github.com/serena-sheng/ego-start/issues
@@ -96,7 +96,7 @@ https://github.com/serena-sheng/ego-start
 
 | Version | Date | Changes | Status |
 |---------|------|---------|--------|
-| 1.0.1 | 2026-10-12 | 补 16/32/48/128 图标；修正描述中的入口计数；加 440×280 促销图 | Draft |
+| 1.0.1 | 2026-10-12 | 补 16/32/48/128 图标；修正描述中的入口计数；加 440×280 促销图与 2 张 1280×800 截图 | Draft |
 | 1.0.0 | — | 初版 | — |
 
 ## Review Notes
