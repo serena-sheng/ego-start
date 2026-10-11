@@ -1,10 +1,16 @@
 {
   "manifest_version": 3,
   "name": "启动台 · 搜索中心",
-  "version": "1.0.0",
-  "description": "五站直达搜索（Google / 必应 / 小红书 / 哔哩哔哩 / SeedHub）与三个 AI 控制台入口的极简新标签页。",
+  "version": "1.0.1",
+  "description": "极简 Chrome 新标签页：必应 / Google / 小红书 / 哔哩哔哩 / SeedHub 六个搜索入口直达，另附四个 AI 控制台入口。",
   "offline_enabled": true,
   "chrome_url_overrides": {
     "newtab": "newtab.html"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
   }
 }
