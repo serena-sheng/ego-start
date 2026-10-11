@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>启动台</title>
+<style>
+  :root{
+    --bg:#F5F6F9;
+    --surface:#FFFFFF;
+    --surface-2:#F3F4F8;
+    --border:#E6E8EF;
+    --border-strong:#D6DAE4;
+    --text:#15171D;
+    --muted:#78808F;
+    --muted-2:#A6ACB9;
+    --accent:#4F46E5;
+    --accent-soft:rgba(79,70,229,.13);
+    --shadow-sm:0 1px 2px rgba(17,20,28,.05);
+    --shadow-md:0 1px 2px rgba(17,20,28,.04), 0 10px 28px -14px rgba(17,20,28,.20);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0D0F13;
+      --surface:#15181E;
+      --surface-2:#1C2029;
+      --border:#252A34;
+      --border-strong:#38404E;
+      --text:#EDF0F5;
+      --muted:#8E95A3;
+      --muted-2:#6B7281;
+      --accent:#928CFF;
+      --accent-soft:rgba(146,140,255,.18);
+      --shadow-sm:0 1px 2px rgba(0,0,0,.40);
+      --shadow-md:0 1px 2px rgba(0,0,0,.35), 0 12px 30px -16px rgba(0,0,0,.85);
+    }
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{height:100%}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","HarmonyOS Sans SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  /* 极轻的环境光，避免纯灰底的廉价感 */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
+    background:
+      radial-gradient(880px 520px at 10% -12%, rgba(99,102,241,.10), transparent 62%),
+      radial-gradient(760px 460px at 94% 0%, rgba(13,148,136,.09), transparent 60%),
+      radial-gradient(720px 520px at 52% 112%, rgba(244,114,182,.07), transparent 62%);
+  }
+  @media (prefers-color-scheme: dark){
+    body::before{
+      background:
+        radial-gradient(880px 520px at 10% -12%, rgba(99,102,241,.16), transparent 62%),
+        radial-gradient(760px 460px at 94% 0%, rgba(13,148,136,.12), transparent 60%),
+        radial-gradient(720px 520px at 52% 112%, rgba(244,114,182,.09), transparent 62%);
+    }
+  }
+
+  .wrap{width:100%;max-width:1060px;margin:0 auto;padding:26px 26px 44px}
+
+  /* ---------- 顶栏 ---------- */
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}
+  .brand{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:13px;font-weight:600;letter-spacing:.02em}
+  .brand .mark{width:17px;height:17px;color:var(--accent);flex:0 0 auto}
+  .brand .spacer{width:1px;height:13px;background:var(--border-strong);margin:0 2px}
+  .brand .lite{font-weight:500;color:var(--muted-2)}
+
+  /* ---------- 区块 ---------- */
+  .section{margin-bottom:28px}
+  .section:first-of-type{margin-top:6px}
+  .section-head{display:flex;align-items:baseline;gap:12px;margin-bottom:13px}
+  .section-head h2{margin:0;font-size:14px;font-weight:600;letter-spacing:.03em}
+  .section-head .hint{font-size:12px;color:var(--muted-2)}
+
+  .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+  .grid.consoles{grid-template-columns:repeat(2,1fr)}
+  .span6{grid-column:span 6}
+  .span3{grid-column:span 3}
+  .span2{grid-column:span 2}
+
+  /* ---------- 搜索卡片 ---------- */
+  .card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:11px;
+    padding:14px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:var(--shadow-sm);
+    text-decoration:none;
+    color:inherit;
+    transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+  }
+  .card:hover{
+    border-color:var(--border-strong);
+    box-shadow:var(--shadow-md);
+    transform:translateY(-1px);
+  }
+  .card:focus-within{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-soft), var(--shadow-md);
+  }
+
+  .card-head{display:flex;align-items:center;gap:9px;min-width:0}
+  .chip{
+    flex:0 0 26px;
+    width:26px;height:26px;
+    display:grid;place-items:center;
+    border-radius:8px;
+    font-size:13px;font-weight:700;line-height:1;
+    background:color-mix(in srgb, var(--c) 13%, transparent);
+    color:var(--c);
+  }
+  .chip.neutral{background:var(--surface-2);color:var(--text)}
+  .card-name{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card-host{margin-left:auto;flex:0 0 auto;font-size:11.5px;color:var(--muted-2);white-space:nowrap}
+
+  .field{
+    display:flex;align-items:center;gap:6px;
+    padding:3px 3px 3px 12px;
+    background:var(--surface-2);
+    border:1px solid transparent;
+    border-radius:10px;
+    transition:background .18s ease, border-color .18s ease;
+  }
+  .field:focus-within{background:var(--surface);border-color:var(--accent)}
+  .field input{
+    flex:1 1 auto;min-width:0;
+    padding:7px 0;
+    border:0;outline:none;background:transparent;
+    font:inherit;font-size:13.5px;color:var(--text);
+  }
+  .field input::placeholder{color:var(--muted-2)}
+  .go{
+    flex:0 0 auto;
+    width:30px;height:30px;
+    display:grid;place-items:center;
+    padding:0;border:0;border-radius:8px;
+    background:transparent;
+    color:var(--muted-2);
+    cursor:pointer;
+    transition:background .16s ease, color .16s ease;
+  }
+  .go svg{width:15px;height:15px}
+  .go:hover{background:var(--accent);color:#fff}
+  .go:active{transform:scale(.94)}
+
+  /* ---------- 控制台入口 ---------- */
+  .card.link{flex-direction:row;align-items:center;gap:11px;padding:13px 14px}
+  .link-body{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1 1 auto}
+  .link-body .card-name{font-size:13.5px}
+  .link-body .card-host{margin:0;font-size:11.5px;color:var(--muted-2)}
+  .arrow{flex:0 0 auto;width:15px;height:15px;color:var(--muted-2);transition:color .16s ease, transform .16s ease}
+  .card.link:hover .arrow{color:var(--accent);transform:translate(2px,-2px)}
+
+  /* ---------- 页脚 ---------- */
+  .foot{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:14px;flex-wrap:wrap;
+    margin-top:32px;padding-top:16px;
+    border-top:1px solid var(--border);
+    font-size:12px;color:var(--muted-2);
+  }
+  kbd{
+    font:inherit;font-size:11px;line-height:1;
+    padding:2px 5px;
+    border:1px solid var(--border);
+    border-radius:5px;
+    background:var(--surface);
+    color:var(--muted);
+  }
+
+  /* ---------- 响应式 ---------- */
+  @media (max-width:980px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .span6,.span3{grid-column:span 2}
+    .span2{grid-column:span 1}
+  }
+  @media (max-width:640px){
+    .wrap{padding:26px 16px 46px}
+    .topbar{margin-bottom:34px}
+    .hero h1{font-size:24px}
+    .hero{margin-bottom:28px}
+    .grid{grid-template-columns:1fr}
+    .grid.consoles{grid-template-columns:1fr}
+    .span6,.span3,.span2{grid-column:span 1}
+    .card-host{display:none}
+    .link-body .card-host{display:block}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .card,.go,.arrow,.field{transition:none}
+    .card:hover{transform:none}
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2.4 21.6 12 12 21.6 2.4 12 12 2.4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
+      </svg>
+      <span>启动台</span>
+      <span class="spacer"></span>
+      <span class="lite">Search Hub</span>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>搜索</h2>
+      <span class="hint">回车即搜 · 当前标签页打开</span>
+    </div>
+
+    <div class="grid">
+      <form class="card span6" data-url="https://cn.bing.com/search?q=" data-key="bing-cn">
+        <div class="card-head">
+          <span class="chip" style="--c:#0F7B6C">B</span>
+          <span class="card-name">必应 Bing · 国内版</span>
+          <span class="card-host">cn.bing.com</span>
+        </div>
+        <div class="field">
+          <input type="text" placeholder="在必应国内版搜索…" aria-label="使用必应国内版搜索" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+          <button type="submit" class="go" aria-label="搜索">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9.2M8.6 3.8 12.8 8l-4.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <form class="card span3" data-url="https://www.google.com/search?q=" data-key="google">
+        <div class="card-head">
+          <span class="chip" style="--c:#4285F4">G</span>
+          <span class="card-name">Google</span>
+          <span class="card-host">google.com</span>
+        </div>
+        <div class="field">
+          <input type="text" placeholder="在 Google 搜索…" aria-label="使用 Google 搜索" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+          <button type="submit" class="go" aria-label="搜索">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9.2M8.6 3.8 12.8 8l-4.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <form class="card span3" data-url="https://www.bing.com/search?q=" data-extra="&setlang=en&cc=US" data-key="bing-intl">
+        <div class="card-head">
+          <span class="chip" style="--c:#0064B7">B</span>
+          <span class="card-name">必应 Bing · 国际版</span>
+          <span class="card-host">bing.com</span>
+        </div>
+        <div class="field">
+          <input type="text" placeholder="在必应国际版搜索…" aria-label="使用必应国际版搜索" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+          <button type="submit" class="go" aria-label="搜索">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9.2M8.6 3.8 12.8 8l-4.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <form class="card span2" data-url="https://www.xiaohongshu.com/search_result?keyword=" data-key="xhs">
+        <div class="card-head">
+          <span class="chip" style="--c:#FF2442">红</span>
+          <span class="card-name">小红书</span>
+          <span class="card-host">xiaohongshu.com</span>
+        </div>
+        <div class="field">
+          <input type="text" placeholder="搜笔记 / 攻略…" aria-label="在小红书搜索" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+          <button type="submit" class="go" aria-label="搜索">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9.2M8.6 3.8 12.8 8l-4.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <form class="card span2" data-url="https://search.bilibili.com/all?keyword=" data-key="bili">
+        <div class="card-head">
+          <span class="chip" style="--c:#00A1D6">哔</span>
+          <span class="card-name">哔哩哔哩</span>
+          <span class="card-host">bilibili.com</span>
+        </div>
+        <div class="field">
+          <input type="text" placeholder="搜视频 / UP 主…" aria-label="在哔哩哔哩搜索" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+          <button type="submit" class="go" aria-label="搜索">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9.2M8.6 3.8 12.8 8l-4.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <form class="card span2" data-url="https://hubdog.cc/s/" data-key="hubdog">
+        <div class="card-head">
+          <span class="chip" style="--c:#17A05E">S</span>
+          <span class="card-name">SeedHub</span>
+          <span class="card-host">hubdog.cc</span>
+        </div>
+        <div class="field">
+          <input type="text" placeholder="搜影视 / 动漫资源…" aria-label="在 SeedHub 站内搜索" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+          <button type="submit" class="go" aria-label="搜索">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9.2M8.6 3.8 12.8 8l-4.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>控制台</h2>
+      <span class="hint">新标签页打开</span>
+    </div>
+
+    <div class="grid consoles">
+      <a class="card link" href="https://platform.deepseek.com/" target="_blank" rel="noopener noreferrer">
+        <span class="chip neutral">D</span>
+        <span class="link-body">
+          <span class="card-name">DeepSeek 开放平台</span>
+          <span class="card-host">platform.deepseek.com</span>
+        </span>
+        <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.2 10.8 10.8 5.2M6.4 5.2h4.4v4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+
+      <a class="card link" href="https://www.kimi.com/code/console?from=kfc_overview_topbar" target="_blank" rel="noopener noreferrer">
+        <span class="chip neutral">K</span>
+        <span class="link-body">
+          <span class="card-name">Kimi Code</span>
+          <span class="card-host">kimi.com/code/console</span>
+        </span>
+        <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.2 10.8 10.8 5.2M6.4 5.2h4.4v4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+
+      <a class="card link" href="https://bigmodel.cn/console/overview" target="_blank" rel="noopener noreferrer">
+        <span class="chip neutral">智</span>
+        <span class="link-body">
+          <span class="card-name">GLM Coding Plan</span>
+          <span class="card-host">bigmodel.cn/console</span>
+        </span>
+        <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.2 10.8 10.8 5.2M6.4 5.2h4.4v4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+
+      <a class="card link" href="https://console.volcengine.com/speech" target="_blank" rel="noopener noreferrer">
+        <span class="chip" style="--c:#325AB4">豆</span>
+        <span class="link-body">
+          <span class="card-name">豆包语音大模型</span>
+          <span class="card-host">console.volcengine.com/speech</span>
+        </span>
+        <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.2 10.8 10.8 5.2M6.4 5.2h4.4v4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>按 <kbd>/</kbd> 聚焦搜索框 · <kbd>Esc</kbd> 退出输入</span>
+    <span>五个搜索框各自独立，回车后直达对应站点</span>
+  </footer>
+
+</main>
+
+<script src="newtab.js"></script>
+</body>
+</html>
